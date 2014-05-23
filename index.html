@@ -3,28 +3,254 @@ layout: default
 title: Pace Front-End Coding Guidelines
 ---
 
+<div class="toc">
+  <p class="no-margin"><strong>Contents:</strong></p>
+  <ul class="toc-list">
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#methodologies">Methodologies</a></li>
+    <li><a href="#indent">Indentation</a></li>
+    <li><a href="#frameworks">Frameworks</a></li>
+    <li><a href="#preprocessors">Preprocessors</a></li>
+    <li><a href="#css-file-structure">SCSS File Structure</a></li>
+    <li><a href="#responsive">Responsive &amp; IE8</a></li>
+    <li><a href="#writing-css">Writing CSS</a></li>
+  </ul>
+</div>
+
 <h1 id="intro">Intro</h1>
 
-<p>As our team grows and code passes through many hands, we ought to come to an agreement of general guidelines to follow for front-end development.</p>
-<p>As with any 'guidelines' these are not meant to be absolute truths, but breaking them must be intentional and with good reason.</p>
-
-<h1>Discussion points:</h1>
-
+<p>As our team grows and we all rub elbows in the repos, we need to come to an agreement of general guidelines to follow for front-end development in order to:</p>
 <ul>
-  <li>Indentation preferences</li>
-  <li>Front-end tooling preferences (frameworks, CLI tools)</li>
-  <li>CSS naming conventions</li>
-  <li>CSS file structure</li>
+  <li>Keep stylesheets maintainable</li>
+  <li>Keep code transparent and readable</li>
+  <li>Increase team flexibility across accounts and code bases</li>
+  <li>Prevent feature duplication</li>
+</ul>
+<p>All of these items are currently proposals and are up for discussion.</p>
+<p><strong>There is a matching framework repo at: <a href="https://github.com/paceco/pi-boot">https://github.com/paceco/pi-boot</a></strong></p>
+
+<h1 id="methodologies">Methodologies</h1>
+<p>For consideration:</p>
+<ul>
+  <li><a href="http://smacss.com/">SMACSS</a></li>
+  <li><a href="http://docssa.info/">DoCCSa</a></li>
+  <li><a href="https://github.com/stubbornella/oocss/wiki">Object-Oriented CSS</a></li>
+  <li><a href="http://bem.info/">BEM</a></li>
 </ul>
 
-<h2>Indentation Preferences</h2>
-<ul>
-	<li>From the devs near the kitchen:</li>
+<h1 id="indent">Indentation</h1>
+<p>We will need to take a vote:</p>
 	<ul>
-		<li>4 spaces = 1 tab. Tabs are not spaces. &mdash;<em>Zach, Shaun, Matt</em></li>
-		<li>
-			Vim <a href="http://vim.wikia.com/wiki/Modeline_magic" target="_blank">Modeline</a>:
-			<code> /* vim: set tabstop=4 noexpandtab softtabstop=4 shiftwidth=4: */ </code>
+		<li><strong>4 spaces = 1 tab.</strong> Tabs are not spaces. (hard tabs) &mdash;<em>Zach, Shaun, Matt</em>
+  		<ul><li>Vim <a href="http://vim.wikia.com/wiki/Modeline_magic" target="_blank">Modeline</a>: <code> /* vim: set tabstop=4 noexpandtab softtabstop=4 shiftwidth=4: */ </code></li></ul>
 		</li>
 	</ul>
+
+<p></p>
+
+<h1 id="frameworks">Frameworks:</h1>
+<ul>
+  <li><a href="http://getbootstrap.com">Bootstrap</a>
+    <ul>
+      <li>This is probably the front-runner since half of the team is already familiar with it.</li>
+    </ul>
+  </li>
+  <li><a href="http://foundation.zurb.com/">Foundation</a></li>
+  <li><a href="https://github.com/csswizardry/inuit.css/">Inuit.css</a></li>
 </ul>
+
+<h1 id="preprocessors">Preprocessors</h1>
+<p><strong>SASS</strong> is our preprocessor of choice.</p>
+<p>Currently we use <strong>Compass</strong> as our general purpose SASS utility, but in the future we could change to:</p>
+<ul>
+  <li><a href="http://gruntjs.com/">Grunt</a></li>
+  <li><a href="http://gulpjs.com/">Gulp</a></li>
+</ul>
+<p>Both tools are Node-based which would require a tooling change, but both offer better task automation and build processes outside of just SASS.</p>
+
+<h1 id="css-file-structure">SCSS File Structure:</h1>
+<p>Modified from DoCCSa and SMACSS for a simpler approach.</p>
+<p>There is a <a href="https://github.com/paceco/pi-boot">Working Repo</a> to start as a boilerplate.</p>
+{% highlight bash %}
+sass
+¦   main.scss
+¦   ie.scss
+¦
++---base
+¦       __base.scss
+¦       _globals.scss
+¦       _fonts.scss
+¦       _variables.scss
+¦       _helpers.scss
+¦       _mixins.scss
+¦
++---components
+¦   ¦   __components.scss
+¦   ¦   _button.scss
+¦   ¦   _tabs.scss
+¦   ¦   _verticalMenu.scss
+¦
++---specifics
+¦   ¦   __specifics.scss
+¦   ¦   _main.scss
+|   |   _nav.scss
+¦   ¦
+¦   +---search
+¦           __search.scss
+¦           _search-forms.scss
+¦           _search-results.scss
+¦
++---vendor
+    _bootstrap.scss (or other framework)
+{% endhighlight %}
+
+<h3>main.scss</h3>
+<p>Master sheet that imports all other scss.</p>
+{% highlight scss %}
+@import 'vendor/_bootstrap';
+
+// variables, fonts, mixins, helpers... common styles used across the entire site
+@import 'base/__base';
+
+// reusable components
+@import 'components/__components';
+
+// declarations specific to the project, organized according to the items/sections represented
+@import 'specifics/__specifics';
+{% endhighlight %}
+
+<h3>Base</h3>
+<p>Contains rules and utilities used across the project.</p>
+
+<ul>
+  <li><b>__base</b> imports all other scss files in this folder. Nothing but imports should live in this file.</li>
+  <li><b>_globals</b> contain rules that are global to the site, things like box sizing, html font size, heading and link defaults, etc.</li>
+  <li><b>_fonts</b> for all font family declarations.</li>
+  <li><b>_variables</b> keep default values, color themes, and configurations</li>
+  <li><strong>_helpers</strong> contain placeholders for simple CSS functionality that can be used by many classes. A  <code>%clearfix</code> class would be an example.</li>
+  <li><strong>_mixins</strong> contain all the functions that can take parameters, such as our responsive media query mixins.</li>
+</ul>
+
+<h3>Components</h3>
+<p>Borrowed from DoCCSa, but much simpler in scope. These are intended to be reusable and extendable pieces of code that could be used in a completely different project. Basically these will be our 'solved' design patterns.</p>
+<p>Typically, new rules should not go in here, only reusable patterns that have evolved fron the 'specifics' folder.</p>
+<p>Because our framework is young, we may not have a lot to put in here yet, but some of our patterns from our SASS/Bootstrap accounts could be refactored for general purpose.</p>
+
+<h3>Specifics</h3>
+<p>This is the common working area for a project. All new rules go into 'specifics' first.</p>
+<ul>
+  <li><strong>__specifics</strong> - import summary for all sheets in specifics.</li>
+  <li><strong>Single underscored files</strong> - indicate rules for a specific section, the name should be descriptive.</li>
+  <li>If a single unscored file because too large (such as search in our above structure) break down in to smaller specific stylesheets and use an import summary (double underscore) to manage importing.</li>
+</ul>
+<p>If a set of rules becomes complex enough and modular enough, it should be moved to components for use in future projects.</p>
+
+<h3>Vendor</h3>
+<p>This is where third-party css goes, such as framework and plugin css. These files can be updated at any time.</p>
+
+<h1 id="responsive">Responsive and IE8</h1>
+<p>Projects should be written in a <a href="http://www.abookapart.com/products/mobile-first">mobile first</a> method.</p>
+<p>We use a series of mixins based off of <a href="http://jakearchibald.github.io/sass-ie/">Jake Archibald's mixins</a> that allow pairing media queries with their rules. So new rules should be written as:</p>
+
+{% highlight scss %}
+.h1 {
+  // these rules apply to all views over 0ems wide
+  // so include defaults and mobile styles
+  font-family: $museo;
+  font-weight: bold;
+  color: $text;
+  font-size: 2em;
+  line-height: 1;
+
+  // these rules apply to all views above 30ems wide.
+  @include respond-min(30em){
+    font-size: 2.5em;
+    line-height: 1.25;
+  }
+
+  // these rules apply to all views above 60ems wide
+  @include respond-min(60em){
+    font-size: 3em;
+    line-height: 1.5; 
+  }
+}
+{% endhighlight %}
+
+<p>Traditionally the problem with mobile first design is the inability of IE8 to process media queries. To handle this there is a special IE stylesheet that contains something like this:</p>
+
+{% highlight scss %}
+$old-ie: true;
+$fix-mqs: 60em;
+@import 'main';
+{% endhighlight %}
+
+<p>This outputs a stylesheet that captures what the site would look like at the given width (60em). We can then force-feed IE8 this special sheet with conditional comments:</p>
+
+{% highlight html %}
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="ie.css">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+    <link rel="stylesheet" href="main.css">
+<!--<![endif]-->
+{% endhighlight %}
+
+<p>There is also a mixin to specifically feed rules into that special IE8 sheet.</p>
+
+{% highlight scss %}
+.h1 {
+  display: inline-block;
+
+  @import old-ie {
+    // will only export in ie.scss
+    display: inline;
+    zoom: 1;
+  }
+}
+{% endhighlight %}
+
+<p>While the mixin is flexible enough to take arbitary values, typically in a project we'll have defined breakpoints:</p>
+
+{% highlight scss %}
+// Defined in the base/_variables.scss
+// BREAKPOINTS (match bootstrap's pixel based breakpoints)
+
+$small-screen: 768px;
+$medium-screen: 992px;
+$large-screen: 1200px;
+
+.h1 {
+  font-size: 2em;
+
+  @include respond-min($small-screen){
+    font-size: 2.5em;
+  }
+
+  @include respond-min($medium-screen){
+    font-size: 3em;
+  }
+
+  @include respond-min($large-screen){
+    font-size: 3.5em;
+  }
+}
+{% endhighlight %}
+
+<h1 id="writing">Writing CSS</h1>
+<p>This section deals with the more subjective topic of attitude and approach to writing general CSS.</p>
+
+<h3>Layout</h3>
+<p>All components should be fluid and have no width properties set. Width's should be governed by the parent grid system (Bootstrap).</p>
+
+<p>Likewise, there should never be a height attribute on a component.</p>
+
+<h3>IDs and Specificity</h3>
+<p>ID's should never be used in CSS selectors because they are <strong>255 times more specific than class selectors</strong>. Once an ID is used in a CSS selector, it can only ever be overwritten by another ID selector.</p>
+
+<p>Selectors should be as short as possible. A selector like <code>.sidebar h3 span</code> is not preferable. It is location-based and cannot be overriden by a single class if necessary. Rather the class should be refactored to <code>.sidebar-meta</code> and only targeted through that class.</p>
+
+<p>Overqualified selectors like <code>div.error</code> are also not preferable. The same effect can be acheived with using only the class: <code>.promo</code>. This insures that the class is as portable as possible (does not require being attached to a div element).</p>
+
+<h3>SCSS Nesting</h3>
+<p>Similar to specificity, SCSS nesting is powerful, but it can create unintentionally complex selectors.</p>
+<p>A general rule of thumb would be to avoid nesting if possible, and limit nesting, when needed, to 3 levels deep.</p>
