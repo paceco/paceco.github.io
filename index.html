@@ -150,91 +150,13 @@ sass
 
 <h1 id="responsive">Responsive and IE8</h1>
 <p>Projects should be written in a <a href="http://www.abookapart.com/products/mobile-first">mobile first</a> method.</p>
-<p>We use a series of mixins based off of <a href="http://jakearchibald.github.io/sass-ie/">Jake Archibald's mixins</a> that allow pairing media queries with their rules. So new rules should be written as:</p>
 
-{% highlight scss %}
-.h1 {
-  // these rules apply to all views over 0ems wide
-  // so include defaults and mobile styles
-  font-family: $museo;
-  font-weight: bold;
-  color: $text;
-  font-size: 2em;
-  line-height: 1;
+<p>In projects where we still need to support IE8, we have two options:</p>
 
-  // these rules apply to all views above 30ems wide.
-  @include respond-min(30em){
-    font-size: 2.5em;
-    line-height: 1.25;
-  }
-
-  // these rules apply to all views above 60ems wide
-  @include respond-min(60em){
-    font-size: 3em;
-    line-height: 1.5; 
-  }
-}
-{% endhighlight %}
-
-<p>Traditionally the problem with mobile first design is the inability of IE8 to process media queries. To handle this there is a special IE stylesheet that contains something like this:</p>
-
-{% highlight scss %}
-$old-ie: true;
-$fix-mqs: 60em;
-@import 'main';
-{% endhighlight %}
-
-<p>This outputs a stylesheet that captures what the site would look like at the given width (60em). We can then force-feed IE8 this special sheet with conditional comments:</p>
-
-{% highlight html %}
-<!--[if lte IE 8]>
-    <link rel="stylesheet" href="ie.css">
-<![endif]-->
-<!--[if gt IE 8]><!-->
-    <link rel="stylesheet" href="main.css">
-<!--<![endif]-->
-{% endhighlight %}
-
-<p>There is also a mixin to specifically feed rules into that special IE8 sheet.</p>
-
-{% highlight scss %}
-.h1 {
-  display: inline-block;
-
-  @import old-ie {
-    // will only export in ie.scss
-    display: inline;
-    zoom: 1;
-  }
-}
-{% endhighlight %}
-
-<p>While the mixin is flexible enough to take arbitary values, typically in a project we'll have defined breakpoints:</p>
-
-{% highlight scss %}
-// Defined in the base/_variables.scss
-// BREAKPOINTS (match bootstrap's pixel based breakpoints)
-
-$small-screen: 768px;
-$medium-screen: 992px;
-$large-screen: 1200px;
-
-.h1 {
-  font-size: 2em;
-
-  @include respond-min($small-screen){
-    font-size: 2.5em;
-  }
-
-  @include respond-min($medium-screen){
-    font-size: 3em;
-  }
-
-  @include respond-min($large-screen){
-    font-size: 3.5em;
-  }
-}
-{% endhighlight %}
+<ul>
+  <li><a href="https://github.com/scottjehl/Respond">Respond.js</a> - a polyfill for IE6-IE8. (preferred)</li>
+  <li><a href="http://jakearchibald.github.io/sass-ie/">Jake Archibald's SASS Hack</a> - no dependency but requires a conditional comment hack, making it non-wordpress friendly.</li>
+</ul>
 
 <h1 id="writing">Writing CSS</h1>
 <p>This section deals with the more subjective topic of attitude and approach to writing general CSS.</p>
