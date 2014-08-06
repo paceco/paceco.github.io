@@ -74,15 +74,18 @@ title: Pace Front-End Coding Guidelines
 {% highlight bash %}
 sass
 ¦   main.scss
-¦   ie.scss
 ¦
 +---base
-¦       __base.scss
-¦       _globals.scss
-¦       _fonts.scss
-¦       _variables.scss
-¦       _helpers.scss
-¦       _mixins.scss
+¦   ¦   __base.scss
+¦   ¦   _globals.scss
+¦   ¦   _fonts.scss
+¦   ¦   _variables.scss
+¦   ¦   _helpers.scss
+¦   ¦   _mixins.scss
+¦
++---bootstrap
+¦   ¦   __bootstrap.scss
+¦   ¦   (all bootstrap sass files)
 ¦
 +---components
 ¦   ¦   __components.scss
@@ -91,23 +94,24 @@ sass
 ¦   ¦   _verticalMenu.scss
 ¦
 +---specifics
-¦   ¦   __specifics.scss
-¦   ¦   _main.scss
-|   |   _nav.scss
-¦   ¦
-¦   +---search
-¦           __search.scss
-¦           _search-forms.scss
-¦           _search-results.scss
-¦
-+---vendor
-    _bootstrap.scss (or other framework)
+    ¦   __specifics.scss
+    ¦   _main.scss
+    |   _nav.scss
+    ¦
+    +---search
+            __search.scss
+            _search-forms.scss
+            _search-results.scss
 {% endhighlight %}
 
 <h3>main.scss</h3>
 <p>Master sheet that imports all other scss.</p>
 {% highlight scss %}
-@import 'vendor/_bootstrap';
+// enable compass
+@import 'compass';
+
+// framework (Bootstrap 3.2.0)
+@import 'bootstrap/__bootstrap';
 
 // variables, fonts, mixins, helpers... common styles used across the entire site
 @import 'base/__base';
@@ -123,13 +127,16 @@ sass
 <p>Contains rules and utilities used across the project.</p>
 
 <ul>
-  <li><b>__base</b> imports all other scss files in this folder. Nothing but imports should live in this file.</li>
-  <li><b>_globals</b> contain rules that are global to the site, things like box sizing, html font size, heading and link defaults, etc.</li>
-  <li><b>_fonts</b> for all font family declarations.</li>
-  <li><b>_variables</b> keep default values, color themes, and configurations</li>
+  <li><strong>__base</strong> imports all other scss files in this folder. Nothing but imports should live in this file.</li>
+  <li><strong>_globals</strong> contain rules that are global to the site, things like box sizing, html font size, heading and link defaults, etc.</li>
+  <li><strong>_fonts</strong> for all font family declarations.</li>
+  <li><strong>_variables</strong> keep default values, color themes, and configurations</li>
   <li><strong>_helpers</strong> contain placeholders for simple CSS functionality that can be used by many classes. A  <code>%clearfix</code> class would be an example.</li>
   <li><strong>_mixins</strong> contain all the functions that can take parameters, such as our responsive media query mixins.</li>
 </ul>
+
+<h3>Bootstrap</h3>
+<p>The entirety of bootstrap in SASS. This is ingested by the main.scss file.</p>
 
 <h3>Components</h3>
 <p>Borrowed from DoCCSa, but much simpler in scope. These are intended to be reusable and extendable pieces of code that could be used in a completely different project. Basically these will be our 'solved' design patterns.</p>
@@ -144,9 +151,6 @@ sass
   <li>If a single unscored file because too large (such as search in our above structure) break down in to smaller specific stylesheets and use an import summary (double underscore) to manage importing.</li>
 </ul>
 <p>If a set of rules becomes complex enough and modular enough, it should be moved to components for use in future projects.</p>
-
-<h3>Vendor</h3>
-<p>This is where third-party css goes, such as framework and plugin css. These files can be updated at any time.</p>
 
 <h1 id="responsive">Responsive and IE8</h1>
 <p>Projects should be written in a <a href="http://www.abookapart.com/products/mobile-first">mobile first</a> method.</p>
@@ -175,4 +179,4 @@ sass
 
 <h3>SCSS Nesting</h3>
 <p>Similar to specificity, SCSS nesting is powerful, but it can create unintentionally complex selectors.</p>
-<p>A general rule of thumb would be to avoid nesting if possible, and limit nesting, when needed, to 3 levels deep.</p>
+<p>A general rule of thumb would be to avoid nesting if possible, and limit nesting, when needed, to 3 levels deep.</p>¦
