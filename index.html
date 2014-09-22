@@ -7,10 +7,8 @@ title: Pace Front-End Coding Guidelines
   <p class="no-margin"><strong>Contents:</strong></p>
   <ul class="toc-list">
     <li><a href="#intro">Intro</a></li>
-    <li><a href="#methodologies">Methodologies</a></li>
     <li><a href="#indent">Indentation</a></li>
-    <li><a href="#frameworks">Frameworks</a></li>
-    <li><a href="#preprocessors">Preprocessors</a></li>
+    <li><a href="#framework">Framework</a></li>
     <li><a href="#css-file-structure">SCSS File Structure</a></li>
     <li><a href="#responsive">Responsive &amp; IE8</a></li>
     <li><a href="#writing-css">Writing CSS</a></li>
@@ -27,49 +25,23 @@ title: Pace Front-End Coding Guidelines
   <li>Prevent feature duplication</li>
 </ul>
 <p>All of these items are currently proposals and are up for discussion.</p>
+
 <p><strong>There is a matching framework repo at: <a href="https://github.com/paceco/pi-boot">https://github.com/paceco/pi-boot</a></strong></p>
 
-<h1 id="methodologies">Methodologies</h1>
-<p>For consideration:</p>
-<ul>
-  <li><a href="http://smacss.com/">SMACSS</a></li>
-  <li><a href="http://docssa.info/">DoCCSa</a></li>
-  <li><a href="https://github.com/stubbornella/oocss/wiki">Object-Oriented CSS</a></li>
-  <li><a href="http://bem.info/">BEM</a></li>
-</ul>
-
-<h1 id="indent">Indentation</h1>
+<h1 id="indent">Indentation <span class="label label-vote">Requires Vote</span></h1>
 <p>We will need to take a vote:</p>
 	<ul>
 		<li><strong>4 spaces = 1 hard tab.</strong> Tabs are not spaces. (hard tabs) &mdash;<em>vote from Zach, Shaun, and Matt</em></li>
     <li><strong>2 spaces = 1 soft tab (SCSS & CSS only).</strong> Tabs ARE spaces. Defaults to hard tabs at 4 spaces elsewhere (PHP, JS).</li>
 	</ul>
 
-<p></p>
 
-<h1 id="frameworks">Frameworks:</h1>
-<ul>
-  <li><a href="http://getbootstrap.com">Bootstrap</a>
-    <ul>
-      <li>This is probably the front-runner since half of the team is already familiar with it.</li>
-    </ul>
-  </li>
-  <li><a href="http://foundation.zurb.com/">Foundation</a></li>
-  <li><a href="https://github.com/csswizardry/inuit.css/">Inuit.css</a></li>
-</ul>
+<h1 id="framework">Framework <span class="label label-committed">Committed</span></h1>
+<p><a href="http://getbootstrap.com">Twitter Bootstrap</a> is our front-end framework of choice.</p>
 
-<h1 id="preprocessors">Preprocessors</h1>
-<p><strong>SASS</strong> is our preprocessor of choice.</p>
-<p>Currently we use <strong>Compass</strong> as our general purpose SASS utility, but in the future we could change to:</p>
-<ul>
-  <li><a href="http://gruntjs.com/">Grunt</a></li>
-  <li><a href="http://gulpjs.com/">Gulp</a></li>
-</ul>
-<p>Both tools are Node-based which would require a tooling change, but both offer better task automation and build processes outside of just SASS.</p>
-
-<h1 id="css-file-structure">SCSS File Structure:</h1>
-<p>Modified from DoCCSa and SMACSS for a simpler approach.</p>
-<p>There is a <a href="https://github.com/paceco/pi-boot">Working Repo</a> to start as a boilerplate.</p>
+<h1 id="css-file-structure">SCSS File Structure <span class="label label-initial">Initial Approach</span></h1>
+<p>Modified from <a href="http://docssa.info/">DoCCSa</a> and <a href="https://smacss.com/">SMACSS</a> for a simpler approach.</p>
+<p>This is the pattern currently in our <a href="https://github.com/paceco/pi-boot">front-end repo</a>.</p>
 {% highlight bash %}
 sass
 ¦   main.scss
@@ -92,10 +64,11 @@ sass
 ¦   ¦   _tabs.scss
 ¦   ¦   _verticalMenu.scss
 ¦
-+---specifics
-    ¦   __specifics.scss
++---layouts
+    ¦   __layouts.scss
     ¦   _main.scss
     |   _nav.scss
+    |   _article.scss
     ¦
     +---search
             __search.scss
@@ -106,21 +79,23 @@ sass
 <h3>main.scss</h3>
 <p>Master sheet that imports all other scss.</p>
 {% highlight scss %}
-// enable compass
-@import 'compass';
-
 // framework (Bootstrap 3.2.0)
 @import 'bootstrap/__bootstrap';
 
-// variables, fonts, mixins, helpers... common styles used across the entire site
+// variables, fonts, mixins, etc... common styles
 @import 'base/__base';
 
 // reusable components
 @import 'components/__components';
 
-// declarations specific to the project, organized according to the items/sections represented
-@import 'specifics/__specifics';
+// layout specific rules ie. _article.scss
+@import 'layouts/__layouts';
 {% endhighlight %}
+
+<h3>Bootstrap</h3>
+<p>The modular SASS version of Bootstrap. This allows us to turn certain parts of Bootstrap on and off.</p>
+<p>All the imports are controlled by <code>sass/bootstrap/__bootstrap.scss</code></p>
+
 
 <h3>Base</h3>
 <p>Contains rules and utilities used across the project.</p>
@@ -134,24 +109,29 @@ sass
   <li><strong>_mixins</strong> contain all the functions that can take parameters, such as our responsive media query mixins.</li>
 </ul>
 
-<h3>Bootstrap</h3>
-<p>The entirety of bootstrap in SASS. This is ingested by the main.scss file.</p>
 
 <h3>Components</h3>
 <p>Borrowed from DoCCSa, but much simpler in scope. These are intended to be reusable and extendable pieces of code that could be used in a completely different project. Basically these will be our 'solved' design patterns.</p>
-<p>Typically, new rules should not go in here, only reusable patterns that have evolved fron the 'specifics' folder.</p>
-<p>Because our framework is young, we may not have a lot to put in here yet, but some of our patterns from our SASS/Bootstrap accounts could be refactored for general purpose.</p>
+<p>Typically, new rules should not go in here, only reusable patterns that have evolved fron the 'layouts' folder.</p>
 
-<h3>Specifics</h3>
-<p>This is the common working area for a project. All new rules go into 'specifics' first.</p>
+
+<h3>Layouts</h3>
+<p>This is the common working area for a project. All new rules go into 'layouts' first.</p>
 <ul>
-  <li><strong>__specifics</strong> - import summary for all sheets in specifics.</li>
+  <li><strong>__layouts</strong> - import summary for all sheets in specifics.</li>
   <li><strong>Single underscored files</strong> - indicate rules for a specific section, the name should be descriptive.</li>
-  <li>If a single unscored file because too large (such as search in our above structure) break down in to smaller specific stylesheets and use an import summary (double underscore) to manage importing.</li>
+  <li>If a single unscored file becomes <strong>too large</strong> (such as search in our above structure) break down in to smaller specific stylesheets and use an import summary (double underscore) to manage importing.</li>
 </ul>
 <p>If a set of rules becomes complex enough and modular enough, it should be moved to components for use in future projects.</p>
 
-<h1 id="responsive">Responsive and IE8</h1>
+
+
+<h1 id="preprocessors">Preprocessors <span class="label label-initial">Initial Approach</span></h1>
+<p><a href="http://sass-lang.com">SASS</a> is our preprocessor of choice. And we now use <a href="http://gulp.js">Gulp</a> as a task manager and bundler.</p>
+<p>See our <a href="http://github.com/paceco/pi-boot">front-end repo</a> for more information on how we're using Gulp.</p>
+
+
+<h1 id="responsive">Responsive and IE8 <span class="label label-initial">Initial Approach</span></h1>
 <p>Projects should be written in a <a href="http://www.abookapart.com/products/mobile-first">mobile first</a> method.</p>
 
 <p>In projects where we still need to support IE8, we have two options:</p>
@@ -161,7 +141,8 @@ sass
   <li><a href="http://jakearchibald.github.io/sass-ie/">Jake Archibald's SASS Hack</a> - no dependency but requires a conditional comment hack, making it non-wordpress friendly.</li>
 </ul>
 
-<h1 id="writing">Writing CSS</h1>
+
+<h1 id="writing">Writing CSS <span class="label label-work">Needs Work</span></h1>
 <p>This section deals with the more subjective topic of attitude and approach to writing general CSS.</p>
 
 <h3>Layout</h3>
@@ -174,8 +155,10 @@ sass
 
 <p>Selectors should be as short as possible. A selector like <code>.sidebar h3 span</code> is not preferable. It is location-based and cannot be overriden by a single class if necessary. Rather the class should be refactored to <code>.sidebar-meta</code> and only targeted through that class.</p>
 
-<p>Overqualified selectors like <code>div.error</code> are also not preferable. The same effect can be acheived with using only the class: <code>.promo</code>. This insures that the class is as portable as possible (does not require being attached to a div element).</p>
+<p>Overqualified selectors like <code>div.error</code> are also not preferable. The same effect can be acheived with using only the class: <code>.error</code>. This insures that the class is as portable as possible (does not require being attached to a div element).</p>
 
 <h3>SCSS Nesting</h3>
-<p>Similar to specificity, SCSS nesting is powerful, but it can create unintentionally complex selectors.</p>
-<p>A general rule of thumb would be to avoid nesting if possible, and limit nesting, when needed, to 3 levels deep.</p>¦
+<p>It's powerful, but can have unintended side effects when nesting too deep.</p>
+<p>A general rule of thumb: try to next a max of 3 levels deep.</p>
+
+
