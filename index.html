@@ -10,8 +10,10 @@ title: Pace Front-End Coding Guidelines
     <li><a href="#indent">Indentation</a></li>
     <li><a href="#framework">Framework</a></li>
     <li><a href="#css-file-structure">SCSS File Structure</a></li>
+    <li><a href="#preprocessors">Preprocessors</a></li>
     <li><a href="#responsive">Responsive &amp; IE8</a></li>
     <li><a href="#writing-css">Writing CSS</a></li>
+    <li><a href="https://github.com/paceco/pi-boot" class="label label-nav">pi-boot &raquo;</a></li>
   </ul>
 </div>
 
@@ -26,7 +28,7 @@ title: Pace Front-End Coding Guidelines
 </ul>
 <p>All of these items are currently proposals and are up for discussion.</p>
 
-<p><strong>There is a matching framework repo at: <a href="https://github.com/paceco/pi-boot">https://github.com/paceco/pi-boot</a></strong></p>
+<p><strong>There is a matching framework repo, <a href="https://github.com/paceco/pi-boot">pi-boot</a>, at: <a href="https://github.com/paceco/pi-boot">https://github.com/paceco/pi-boot</a></strong></p>
 
 <h1 id="indent">Indentation <span class="label label-vote">Requires Vote</span></h1>
 <p>We will need to take a vote:</p>
@@ -65,15 +67,19 @@ sass
 ¦   ¦   _verticalMenu.scss
 ¦
 +---layouts
-    ¦   __layouts.scss
-    ¦   _main.scss
-    |   _nav.scss
-    |   _article.scss
-    ¦
-    +---search
-            __search.scss
-            _search-forms.scss
-            _search-results.scss
+¦   ¦   __layouts.scss
+¦   ¦   _main.scss
+¦   ¦   _nav.scss
+¦   ¦   _article.scss
+¦   ¦
+¦   +---search
+¦           __search.scss
+¦           _search-forms.scss
+¦           _search-results.scss
+¦
++---vendor
+    ¦   __vendor.scss
+    ¦   (all third-party css files)
 {% endhighlight %}
 
 <h3>main.scss</h3>
@@ -81,6 +87,9 @@ sass
 {% highlight scss %}
 // framework (Bootstrap 3.2.0)
 @import 'bootstrap/__bootstrap';
+
+// third-party css
+@import 'vendor/__vendor';
 
 // variables, fonts, mixins, etc... common styles
 @import 'base/__base';
@@ -102,11 +111,11 @@ sass
 
 <ul>
   <li><strong>__base</strong> imports all other scss files in this folder. Nothing but imports should live in this file.</li>
-  <li><strong>_globals</strong> contain rules that are global to the site, things like box sizing, html font size, heading and link defaults, etc.</li>
-  <li><strong>_fonts</strong> for all font family declarations.</li>
   <li><strong>_variables</strong> keep default values, color themes, and configurations</li>
-  <li><strong>_helpers</strong> contain placeholders for simple CSS functionality that can be used by many classes. A  <code>%clearfix</code> class would be an example.</li>
   <li><strong>_mixins</strong> contain all the functions that can take parameters, such as our responsive media query mixins.</li>
+  <li><strong>_fonts</strong> for all font family declarations.</li>
+  <li><strong>_globals</strong> contain rules that are global to the site, things like box sizing, html font size, heading and link defaults, etc.</li>
+  <li><strong>_helpers</strong> contain placeholders for simple CSS functionality that can be used by many classes. A  <code>%clearfix</code> class would be an example.</li>
 </ul>
 
 
@@ -124,6 +133,8 @@ sass
 </ul>
 <p>If a set of rules becomes complex enough and modular enough, it should be moved to components for use in future projects.</p>
 
+<h3>Vendor</h3>
+<p>This is the home for all third-party css we're including into our project, like <a href="http://http://fontawesome.io/">FontAwesome</a></p>
 
 
 <h1 id="preprocessors">Preprocessors <span class="label label-initial">Initial Approach</span></h1>

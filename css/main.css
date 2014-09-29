@@ -98,6 +98,7 @@ li {
   line-height: 1;
   vertical-align: middle;
   font-weight: normal;
+  text-decoration: none;
 }
 
 .label-vote {
@@ -114,6 +115,10 @@ li {
 
 .label-work {
   background-color: #d33682;
+}
+
+.label-nav {
+  background-color: #0a9bde;
 }
 
 /* Modules
